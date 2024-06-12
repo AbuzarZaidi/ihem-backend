@@ -30,7 +30,6 @@ const addPmmlData= async(req, res, next)=>{
       new HttpError("Something Went Wrong Please Try Later.", 500);
     }
 }
-//Get all Roles
 const getAllPmmlData = (req,res, next ) =>{
   PMMLData.findAll({ order: [["createdAt", "ASC"]] })
   .then((result) => {
@@ -44,7 +43,6 @@ const getAllPmmlData = (req,res, next ) =>{
     return next(new HttpError("Data cannot fetch try again later!", 200));
   });
 }
-//Get Role by ID
 const getPmmlDataById=(req, res, next)=>{
   PMMLData.findByPk(req.params.id)
 

@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     // Create the chemistry table
-    await queryInterface.createTable('chemistry', {
+    await queryInterface.createTable('chemistries', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -23,6 +23,16 @@ module.exports = {
       color_data: {
         type: 'color_type', // Using the color_type composite type
         allowNull: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

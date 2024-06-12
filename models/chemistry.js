@@ -1,16 +1,20 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-  const PMMLData = sequelize.define('pmmldata', {
+  const Chemistry = sequelize.define('chemistry', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    devicetype: DataTypes.TEXT,
-    pmml: DataTypes.TEXT
+    name: DataTypes.TEXT,
+    lastname: DataTypes.TEXT,
+    color_data: {
+      type: 'color_type',
+      allowNull: true
+    }
   });
 
-  return PMMLData;
+  return Chemistry;
 };
