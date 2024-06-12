@@ -8,7 +8,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors());
 const port=process.env.PORT||4000;
-// app.use(router)
+app.use(router)
 app.use((req,res,next)=>{
     const error = new HttpError('Could not find this route.', 404);
     throw error;
