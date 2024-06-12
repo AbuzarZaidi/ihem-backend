@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-  const User_Role = sequelize.define('PMML_Data', {
+  const User_Role = sequelize.define('pmmldata', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
