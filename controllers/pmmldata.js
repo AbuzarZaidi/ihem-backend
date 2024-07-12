@@ -40,6 +40,7 @@ const getAllPmmlData = (req,res, next ) =>{
     });
   })
   .catch((err) => {
+    console.log(err)
     return next(new HttpError("Data cannot fetch try again later!", 200));
   });
 }
