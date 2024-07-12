@@ -31,7 +31,7 @@ const addPmmlData= async(req, res, next)=>{
     }
 }
 const getAllPmmlData = (req,res, next ) =>{
-  PMMLData.findAll({ order: [["createdAt", "ASC"]] })
+  PMMLData.findAll()
   .then((result) => {
     res.status(200).json({
       success: true,

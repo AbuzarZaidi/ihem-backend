@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
   const Treatment = sequelize.define('treatment', {
-    id: {
+    table_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
       autoIncrement: true,
@@ -26,6 +26,9 @@ module.exports = (sequelize, Sequelize) => {
       type: 'color_type',
       allowNull: true
     }
+  }, {
+    tableName: 'treatment',  // Explicitly define the table name
+    timestamps: false, 
   });
 
   return Treatment;

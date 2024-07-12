@@ -40,11 +40,25 @@ const addTreatmentData = async (req, res, next) => {
       recipehem_oxygen,
       recipehem_exposure
     } = recipehem;
+    const lastIdQuery = `
+    SELECT table_id FROM treatment ORDER BY table_id DESC LIMIT 1;
+  `;
+
+  const lastIdResult = await sequelize.query(lastIdQuery, {
+    type: Sequelize.QueryTypes.SELECT
+  });
+
+  let tableId = 1; // default to 1 if table is empty
+  if (lastIdResult.length > 0) {
+      tableId = parseInt(lastIdResult[0].table_id) + 1;
+  }
+  console.log(tableId,'tableId')
     const insertQuery = `
-    INSERT INTO treatments (
-      sample, uuid_user, comments, currcolor, wishedcolor, gotcolor, quantity, recipe, recipehem
+    INSERT INTO treatment (
+      table_id,sample, uuid_user, comments, currcolor, wishedcolor, gotcolor, quantity, recipe, recipehem
     )
     VALUES (
+      :tableId,
       ROW(:hair_type, :thickness, :position, :growth, :length, :white_hair, :density)::hair_sample,
       :uuid_user,
       :comments,
@@ -60,6 +74,7 @@ const addTreatmentData = async (req, res, next) => {
   
   const result = await sequelize.query(insertQuery, {
     replacements: {
+tableId,
       hair_type,
       thickness,
       position,
@@ -105,7 +120,7 @@ const addTreatmentData = async (req, res, next) => {
   }
 }
 const getAllTreatmentData = (req,res, next ) =>{
-  Treatment.findAll({ order: [["createdAt", "ASC"]] })
+  Treatment.findAll()
   .then((result) => {
     res.status(200).json({
       success: true,
