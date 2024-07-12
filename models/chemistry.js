@@ -24,7 +24,8 @@ module.exports = (sequelize, Sequelize) => {
     //   allowNull: true
     // }
   }, {
-    tableName: 'chemistry'  // Explicitly define the table name
+    tableName: 'chemistry',  // Explicitly define the table name
+    timestamps: false, 
   });
 
   return Chemistry;
