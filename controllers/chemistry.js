@@ -3,50 +3,61 @@ const { Sequelize } = require('sequelize');
 const HttpError = require("../models/http-error");
 const crypto = require("crypto");
 const addChemistryData = async (req, res, next) => {
-    try {
-      const { name, lastname, color_033, color_11, color_42, color_50,
-        color_566, color_100 } = req.body;
+  try {
+    const { name, lastname, color_033, color_11, color_42, color_50,
+      color_566, color_100 } = req.body;
 
-  
-      if (!name || !lastname || !color_033|| !color_11|| !color_42|| !color_50|| 
-        !color_566|| !color_100) {
-        return next(new HttpError("Please provide all the information!", 400));
-      }
-const table_id=68;
-  
-      const insertQuery = `
-        INSERT INTO chemistry (table_id,name, lastname, color_033, color_11, color_42, color_50,
-        color_566, color_100)
-        VALUES (:table_id,:name, :lastname, :color_033, :color_11, :color_42, :color_50,
-        :color_566, :color_100)
-        RETURNING *;
-      `;
-  
-      const result = await sequelize.query(insertQuery, {
-        replacements: {
-          table_id,
-          name,
-          lastname,
-          color_033,
-          color_11,
-          color_42,
-          color_50,
-          color_566,
-          color_100
-        },
-        type: Sequelize.QueryTypes.INSERT
-      });
-  
-      res.status(200).json({
-        success: true,
-        message: "Data Successfully Created!",
-        data: result[0]
-      });
-    } catch (error) {
-      console.log(error, 'error');
-      return next(new HttpError("Something Went Wrong Please Try Later.", 500));
+    if (!name || !lastname || !color_033|| !color_11|| !color_42|| !color_50|| 
+      !color_566|| !color_100) {
+      return next(new HttpError("Please provide all the information!", 400));
     }
-  };
+    // Fetch the last table_id
+    const lastIdQuery = `
+      SELECT table_id FROM chemistry ORDER BY table_id DESC LIMIT 1;
+    `;
+
+    const lastIdResult = await sequelize.query(lastIdQuery, {
+      type: Sequelize.QueryTypes.SELECT
+    });
+
+    let tableId = 1; // default to 1 if table is empty
+    if (lastIdResult.length > 0) {
+        tableId = parseInt(lastIdResult[0].table_id) + 1;
+    }
+    const insertQuery = `
+      INSERT INTO chemistry (table_id,name, lastname, color_033, color_11, color_42, color_50,
+      color_566, color_100)
+      VALUES (:tableId,:name, :lastname, :color_033, :color_11, :color_42, :color_50,
+      :color_566, :color_100)
+      RETURNING *;
+    `;
+
+    const result = await sequelize.query(insertQuery, {
+      replacements: {
+        tableId,
+        name,
+        lastname,
+        color_033,
+        color_11,
+        color_42,
+        color_50,
+        color_566,
+        color_100
+      },
+      type: Sequelize.QueryTypes.INSERT
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Data Successfully Created!",
+      data: result[0]
+    });
+  } catch (error) {
+    console.log(error, 'error');
+    return next(new HttpError("Something Went Wrong Please Try Later.", 500));
+  }
+};
+
 // const addChemistryData = async (req, res, next) => {
 //   try {
 //     const { name, lastname, color_data } = req.body;
