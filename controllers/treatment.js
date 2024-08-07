@@ -119,7 +119,20 @@ tableId,
     return next(new HttpError("Something Went Wrong Please Try Later.", 500));
   }
 }
-const getAllTreatmentData = (req,res, next ) =>{
+const getAllTreatmentData = async(req,res, next ) =>{
+  const device='pump1'
+  const result = await sequelize.query("SELECT list_netdevices('2') AS alias", {
+    type: sequelize.QueryTypes.SELECT,
+  });
+  console.log(result,'result')
+  const [results, metadata] = await sequelize.query(
+    'SELECT public.read_sensor(:device) AS sensor_data',
+    {
+      replacements: { device },
+      type: Sequelize.QueryTypes.SELECT
+    }
+  );
+  console.log(results,'results')
   Treatment.findAll()
   .then((result) => {
     res.status(200).json({
@@ -168,8 +181,38 @@ const deleteTreatmentDataById= (req, res, next)=>{
       new HttpError("Something Went Wrong Please Try Later.", 500);
     }
 }
+const readSensorColor = async(req,res,next)=>{
+try {
+//   const param='1'
+//   const results = await sequelize.query(
+//     'SELECT public.list_netdevices(:param) AS result',
+//     {
+//         replacements: { param },
+//         type: Sequelize.QueryTypes.SELECT
+//     }
+// );
+// console.log('Function Result:', results);
+const treatmentId = req.body.sessionID;
+    const device = req.body.selectedColorDevice;
+    const isInitial = true; 
+    await sequelize.query(
+      'CALL public.read_sensor(:treatmentId, :device, :isInitial)',
+      {
+          replacements: { treatmentId, device, isInitial },
+          type: Sequelize.QueryTypes.RAW
+      }
+  );
 
+  // If you need to return a response
+  res.status(200).send('Procedure executed successfully');
+} catch (error) {
+  console.log(error)
+  new HttpError("Something Went Wrong Please Try Later.", 500);
+    
+}
+}
 exports.addTreatmentData=addTreatmentData
+exports.readSensorColor=readSensorColor
 exports.getAllTreatmentData=getAllTreatmentData
 exports.getTreatmentDataById=getTreatmentDataById
 exports.deleteTreatmentDataById=deleteTreatmentDataById

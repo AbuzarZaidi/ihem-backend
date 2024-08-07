@@ -5,5 +5,7 @@ router.post('/addTreatmentData', treatmentController.addTreatmentData);
 router.get('/getAllTreatmentData', treatmentController.getAllTreatmentData);
 router.get('/getTreatmentDataById/:id', treatmentController.getTreatmentDataById);
 router.delete('/deleteTreatmentDataById/:id', treatmentController.deleteTreatmentDataById)
+router.get('/readSensorColor', treatmentController.readSensorColor)
 // router.patch('/updateChemistryDataById/:id', chemistryController.updateChemistryDataById)
+
 module.exports = router;
