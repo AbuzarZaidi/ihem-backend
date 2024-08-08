@@ -183,18 +183,12 @@ const deleteTreatmentDataById= (req, res, next)=>{
 }
 const readSensorColor = async(req,res,next)=>{
 try {
-//   const param='1'
-//   const results = await sequelize.query(
-//     'SELECT public.list_netdevices(:param) AS result',
-//     {
-//         replacements: { param },
-//         type: Sequelize.QueryTypes.SELECT
-//     }
-// );
-// console.log('Function Result:', results);
-const treatmentId = req.body.sessionID;
-    const device = req.body.selectedColorDevice;
-    const isInitial = true; 
+     const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
+     console.log(treatmentRecord,'treatmentRecord')
+     console.log(treatmentRecord.table_id,'id')
+const treatmentId = treatmentRecord.table_id;
+    const device = 'sensor1';
+    const isInitial = false; 
     await sequelize.query(
       'CALL public.read_sensor(:treatmentId, :device, :isInitial)',
       {
