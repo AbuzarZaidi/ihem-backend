@@ -215,8 +215,19 @@ const updateWishedColor=async(req,res,next)=>{
     new HttpError("Something Went Wrong Please Try Later.", 500);
   }
 }
+const updateQuantity=async(req,res,next)=>{
+  try {
+    const response = await Treatment.update({quantity:req.body.quantity}, {
+      where: {uuid_user: req.body.userId },
+    });
+    return response
+  } catch (error) {
+    new HttpError("Something Went Wrong Please Try Later.", 500);
+  }
+}
 exports.addTreatmentData=addTreatmentData
 exports.updateWishedColor=updateWishedColor
+exports.updateQuantity=updateQuantity
 exports.readSensorColor=readSensorColor
 exports.getAllTreatmentData=getAllTreatmentData
 exports.getTreatmentDataById=getTreatmentDataById

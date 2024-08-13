@@ -6,7 +6,8 @@ router.get('/getAllTreatmentData', treatmentController.getAllTreatmentData);
 router.get('/getTreatmentDataById/:id', treatmentController.getTreatmentDataById);
 router.delete('/deleteTreatmentDataById/:id', treatmentController.deleteTreatmentDataById)
 router.get('/readSensorColor', treatmentController.readSensorColor)
-router.patch('/updateWishedColor', treatmentController.updateWishedColor)
+router.patch('/updatetreatment', treatmentController.updateWishedColor)
+router.patch('/updateQuantity', treatmentController.updateQuantity)
 // router.patch('/updateChemistryDataById/:id', chemistryController.updateChemistryDataById)
 
 module.exports = router;
