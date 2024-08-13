@@ -225,8 +225,54 @@ const updateQuantity=async(req,res,next)=>{
     new HttpError("Something Went Wrong Please Try Later.", 500);
   }
 }
+const computeFormula = async(req,res,next)=>{
+  try {
+       const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
+       console.log(treatmentRecord,'treatmentRecord')
+       console.log(treatmentRecord.table_id,'id')
+  const treatmentId = treatmentRecord.table_id;
+      await sequelize.query(
+        'CALL public.compute_formula(:treatmentId)',
+        {
+            replacements: { treatmentId},
+            type: Sequelize.QueryTypes.RAW
+        }
+    );
+  
+    // If you need to return a response
+    res.status(200).send('Compute formula executed successfully');
+  } catch (error) {
+    console.log(error)
+    new HttpError("Something Went Wrong Please Try Later.", 500);
+      
+  }
+  }
+  const modifyFormula = async(req,res,next)=>{
+    try {
+         const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
+    const treatmentId = treatmentRecord.table_id;
+    const color = req.body.color;
+    const percentage = req.body.percentage;
+        await sequelize.query(
+          'CALL public.modify_formula(:treatmentId, :color, :percentage)',
+          {
+              replacements: { treatmentId,color,percentage},
+              type: Sequelize.QueryTypes.RAW
+          }
+      );
+    
+      // If you need to return a response
+      res.status(200).send('Modify formula executed successfully');
+    } catch (error) {
+      console.log(error)
+      new HttpError("Something Went Wrong Please Try Later.", 500);
+        
+    }
+    }
 exports.addTreatmentData=addTreatmentData
 exports.updateWishedColor=updateWishedColor
+exports.computeFormula=computeFormula
+exports.modifyFormula=modifyFormula
 exports.updateQuantity=updateQuantity
 exports.readSensorColor=readSensorColor
 exports.getAllTreatmentData=getAllTreatmentData

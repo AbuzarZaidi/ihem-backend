@@ -5,7 +5,9 @@ router.post('/addTreatmentData', treatmentController.addTreatmentData);
 router.get('/getAllTreatmentData', treatmentController.getAllTreatmentData);
 router.get('/getTreatmentDataById/:id', treatmentController.getTreatmentDataById);
 router.delete('/deleteTreatmentDataById/:id', treatmentController.deleteTreatmentDataById)
-router.get('/readSensorColor', treatmentController.readSensorColor)
+router.post('/readSensorColor', treatmentController.readSensorColor)
+router.post('/computeFormula', treatmentController.computeFormula)
+router.post('/modifyFormula', treatmentController.modifyFormula)
 router.patch('/updatetreatment', treatmentController.updateWishedColor)
 router.patch('/updateQuantity', treatmentController.updateQuantity)
 // router.patch('/updateChemistryDataById/:id', chemistryController.updateChemistryDataById)
