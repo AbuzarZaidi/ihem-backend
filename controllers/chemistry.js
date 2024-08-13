@@ -130,6 +130,21 @@ const getAllChemistryData = (req,res, next ) =>{
     return next(new HttpError("Data cannot fetch try again later!", 200));
   });
 }
+const listOfColors = (req,res, next ) =>{
+  // Chemistry.findAll({ order: [["createdAt", "ASC"]] })
+  Chemistry.findAll({attributes: ['table_id','name','lastname']})
+  .then((result) => {
+    res.status(200).json({
+      success: true,
+      message: "Colors list Fetch Successfully!",
+      data: result,
+    });
+  })
+  .catch((err) => {
+    console.log(err)
+    return next(new HttpError("Data cannot fetch try again later!", 200));
+  });
+}
 const getChemistryDataById=(req, res, next)=>{
   Chemistry.findByPk(req.params.id)
 
@@ -172,5 +187,6 @@ const deleteChemistryDataById= (req, res, next)=>{
 
 exports.addChemistryData=addChemistryData
 exports.getAllChemistryData=getAllChemistryData
+exports.listOfColors=listOfColors
 exports.getChemistryDataById=getChemistryDataById
 exports.deleteChemistryDataById=deleteChemistryDataById
