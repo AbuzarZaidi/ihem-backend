@@ -8,6 +8,7 @@ router.delete('/deleteTreatmentDataById/:id', treatmentController.deleteTreatmen
 router.post('/readSensorColor', treatmentController.readSensorColor)
 router.post('/computeFormula', treatmentController.computeFormula)
 router.post('/modifyFormula', treatmentController.modifyFormula)
+router.post('/produceFormula', treatmentController.produceFormula)
 router.patch('/updatetreatment', treatmentController.updateWishedColor)
 router.patch('/updateQuantity', treatmentController.updateQuantity)
 // router.patch('/updateChemistryDataById/:id', chemistryController.updateChemistryDataById)
