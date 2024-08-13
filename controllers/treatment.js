@@ -205,7 +205,18 @@ const treatmentId = treatmentRecord.table_id;
     
 }
 }
+const updateWishedColor=async(req,res,next)=>{
+  try {
+    const response = await Treatment.update({wishedcolor:req.body.wishedcolor}, {
+      where: {uuid_user: req.body.userId },
+    });
+    return response
+  } catch (error) {
+    new HttpError("Something Went Wrong Please Try Later.", 500);
+  }
+}
 exports.addTreatmentData=addTreatmentData
+exports.updateWishedColor=updateWishedColor
 exports.readSensorColor=readSensorColor
 exports.getAllTreatmentData=getAllTreatmentData
 exports.getTreatmentDataById=getTreatmentDataById
