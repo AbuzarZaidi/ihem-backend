@@ -120,19 +120,19 @@ tableId,
   }
 }
 const getAllTreatmentData = async(req,res, next ) =>{
-  const device='pump1'
-  const result = await sequelize.query("SELECT list_netdevices('2') AS alias", {
-    type: sequelize.QueryTypes.SELECT,
-  });
-  console.log(result,'result')
-  const [results, metadata] = await sequelize.query(
-    'SELECT public.read_sensor(:device) AS sensor_data',
-    {
-      replacements: { device },
-      type: Sequelize.QueryTypes.SELECT
-    }
-  );
-  console.log(results,'results')
+  // const device='pump1'
+  // const result = await sequelize.query("SELECT list_netdevices('2') AS alias", {
+  //   type: sequelize.QueryTypes.SELECT,
+  // });
+  // console.log(result,'result')
+  // const [results, metadata] = await sequelize.query(
+  //   'SELECT public.read_sensor(:device) AS sensor_data',
+  //   {
+  //     replacements: { device },
+  //     type: Sequelize.QueryTypes.SELECT
+  //   }
+  // );
+  // console.log(results,'results')
   Treatment.findAll()
   .then((result) => {
     res.status(200).json({
@@ -160,7 +160,19 @@ const getTreatmentDataById=(req, res, next)=>{
     return next(new HttpError("Data cannot fetch try again later!", 200));
   });
 }
-
+const getTreatmentDataByUserId=(req, res, next)=>{
+  Treatment.findOne({where:{uuid_user:req.params.userId}})
+  .then((result) => {
+    res.status(200).json({
+      success: true,
+      message: "Data Fetch Successfully!",
+      data: result,
+    });
+  })
+  .catch((err) => {
+    return next(new HttpError("Data cannot fetch try again later!", 200));
+  });
+}
 const deleteTreatmentDataById= (req, res, next)=>{
   try {
     Treatment.findByPk(req.params.id)
@@ -307,6 +319,7 @@ const computeFormula = async(req,res,next)=>{
     }
     }
 exports.addTreatmentData=addTreatmentData
+exports.getTreatmentDataByUserId=getTreatmentDataByUserId
 exports.updateWishedColor=updateWishedColor
 exports.computeFormula=computeFormula
 exports.modifyFormula=modifyFormula

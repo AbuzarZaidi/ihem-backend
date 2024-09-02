@@ -4,6 +4,7 @@ const treatmentController= require('../controllers/treatment')
 router.post('/addTreatmentData', treatmentController.addTreatmentData);
 router.get('/getAllTreatmentData', treatmentController.getAllTreatmentData);
 router.get('/getTreatmentDataById/:id', treatmentController.getTreatmentDataById);
+router.get('/getTreatmentDataByUserId/:userId', treatmentController.getTreatmentDataByUserId);
 router.delete('/deleteTreatmentDataById/:id', treatmentController.deleteTreatmentDataById)
 router.post('/readSensorColor', treatmentController.readSensorColor)
 router.post('/computeFormula', treatmentController.computeFormula)
