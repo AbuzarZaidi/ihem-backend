@@ -288,8 +288,8 @@ const computeFormula = async(req,res,next)=>{
   const produceFormula = async(req,res,next)=>{
     try {
          const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
-    const treatmentId = treatmentRecord.table_id;
-    const pm = req.body.colorProductionDevice;
+    const id = treatmentRecord.table_id;
+    const pm = 'pump1';
     const [results, metadata] = await sequelize.query('SELECT * FROM produce_formula(:id, :pm)', {
       replacements: { id, pm },
       type: Sequelize.QueryTypes.SELECT, // Specify the type of query
@@ -297,7 +297,7 @@ const computeFormula = async(req,res,next)=>{
 
     res.status(200).json({
       success: true,
-      message: "Modify formula executed successfully!",
+      message: "Produce formula function executed successfully!",
       data:results
     });
     } catch (error) {
