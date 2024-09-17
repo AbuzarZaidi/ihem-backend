@@ -195,6 +195,7 @@ const deleteTreatmentDataById= (req, res, next)=>{
 }
 const readSensorColor = async(req,res,next)=>{
 try {
+ 
      const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
      console.log(treatmentRecord,'treatmentRecord')
      console.log(treatmentRecord.table_id,'id')
@@ -212,7 +213,8 @@ const treatmentId = treatmentRecord.table_id;
   // If you need to return a response
   res.status(200).json({
     success: true,
-    message: "Procedure executed successfully!",
+    message: "Read Scanner Working!",
+    // message: "Procedure executed successfully!",
   });
 } catch (error) {
   console.log(error)
@@ -222,7 +224,7 @@ const treatmentId = treatmentRecord.table_id;
 }
 const updateWishedColor=async(req,res,next)=>{
   try {
-    const response = await Treatment.update({wishedcolor:req.body.wishedcolor}, {
+    const response = await Treatment.update({wishedcolor:req.body.wishedColor,quantity:req.body.quantity}, {
       where: {uuid_user: req.body.userId },
     });
     res.status(200).json({
@@ -299,6 +301,7 @@ const computeFormula = async(req,res,next)=>{
     }
   const produceFormula = async(req,res,next)=>{
     try {
+      console.log("click")
          const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
     const id = treatmentRecord.table_id;
     const pm = 'pump1';
@@ -309,7 +312,8 @@ const computeFormula = async(req,res,next)=>{
 
     res.status(200).json({
       success: true,
-      message: "Produce formula function executed successfully!",
+      message: "Mixer is Working!",
+      // message: "Produce formula function executed successfully!",
       data:results
     });
     } catch (error) {
