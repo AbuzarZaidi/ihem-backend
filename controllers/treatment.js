@@ -5,41 +5,51 @@ const crypto = require("crypto");
 // router.post('/addTreatmentData', treatmentController.addTreatmentData);
 const addTreatmentData = async (req, res, next) => {
   try {
-    const { sample, uuid_user, comments, currcolor, wishedcolor, gotcolor, quantity, recipe, recipehem } = req.body;
-    if (!sample || !uuid_user || !comments || !currcolor|| !wishedcolor|| !gotcolor|| !quantity|| !recipe|| !recipehem) {
-      return next(new HttpError("Please fill the complete form!", 400));
-    }
-    const {
-      hair_type,
-      thickness,
-      position,
-      growth,
-      length,
-      white_hair,
-      density
-    }=sample
-    const {
-      recipe_color_033,
-      recipe_color_11,
-      recipe_color_42,
-      recipe_color_50,
-      recipe_color_566,
-      recipe_color_100,
-      recipe_oxytype,
-      recipe_oxygen,
-      recipe_exposure
-    } = recipe;
-    const {
-      recipehem_color_033,
-      recipehem_color_11,
-      recipehem_color_42,
-      recipehem_color_50,
-      recipehem_color_566,
-      recipehem_color_100,
-      recipehem_oxytype,
-      recipehem_oxygen,
-      recipehem_exposure
-    } = recipehem;
+    // const { sample, uuid_user, comments, currcolor, wishedcolor, gotcolor, quantity, recipe, recipehem } = req.body;
+    // if (!sample || !uuid_user || !comments || !currcolor|| !wishedcolor|| !gotcolor|| !quantity|| !recipe|| !recipehem) {
+    //   return next(new HttpError("Please fill the complete form!", 400));
+    // }
+    console.log(req.body,'req.boby')
+    const uuid_user=req.body.userId
+   const isTreatmentExist = await Treatment.findOne({where:{uuid_user:req.body.userId}})
+   if(isTreatmentExist){
+    res.status(200).json({
+      success: true,
+      message: "Treatment already exist!",
+      data: isTreatmentExist
+    });
+   }
+    // const {
+    //   hair_type,
+    //   thickness,
+    //   position,
+    //   growth,
+    //   length,
+    //   white_hair,
+    //   density
+    // }=sample
+    // const {
+    //   recipe_color_033,
+    //   recipe_color_11,
+    //   recipe_color_42,
+    //   recipe_color_50,
+    //   recipe_color_566,
+    //   recipe_color_100,
+    //   recipe_oxytype,
+    //   recipe_oxygen,
+    //   recipe_exposure
+    // } = recipe;
+    // const {
+    //   recipehem_color_033,
+    //   recipehem_color_11,
+    //   recipehem_color_42,
+    //   recipehem_color_50,
+    //   recipehem_color_566,
+    //   recipehem_color_100,
+    //   recipehem_oxytype,
+    //   recipehem_oxygen,
+    //   recipehem_exposure
+    // } = recipehem;
     const lastIdQuery = `
     SELECT table_id FROM treatment ORDER BY table_id DESC LIMIT 1;
   `;
@@ -53,62 +63,80 @@ const addTreatmentData = async (req, res, next) => {
       tableId = parseInt(lastIdResult[0].table_id) + 1;
   }
   console.log(tableId,'tableId')
-    const insertQuery = `
+  const insertQuery = `
     INSERT INTO treatment (
-      table_id,sample, uuid_user, comments, currcolor, wishedcolor, gotcolor, quantity, recipe, recipehem
+      table_id,uuid_user
     )
     VALUES (
       :tableId,
-      ROW(:hair_type, :thickness, :position, :growth, :length, :white_hair, :density)::hair_sample,
-      :uuid_user,
-      :comments,
-      :currcolor,
-      :wishedcolor,
-      :gotcolor,
-      :quantity,
-      ROW(:recipe_color_033, :recipe_color_11, :recipe_color_42, :recipe_color_50, :recipe_color_566, :recipe_color_100, :recipe_oxytype, :recipe_oxygen, :recipe_exposure)::color_type,
-      ROW(:recipehem_color_033, :recipehem_color_11, :recipehem_color_42, :recipehem_color_50, :recipehem_color_566, :recipehem_color_100, :recipehem_oxytype, :recipehem_oxygen, :recipehem_exposure)::color_type
+      :uuid_user
     )
     RETURNING *;
   `;
   
   const result = await sequelize.query(insertQuery, {
     replacements: {
-tableId,
-      hair_type,
-      thickness,
-      position,
-      growth,
-      length,
-      white_hair,
-      density,
-      uuid_user,
-      comments,
-      currcolor,
-      wishedcolor,
-      gotcolor,
-      quantity,
-      recipe_color_033,
-      recipe_color_11,
-      recipe_color_42,
-      recipe_color_50,
-      recipe_color_566,
-      recipe_color_100,
-      recipe_oxytype,
-      recipe_oxygen,
-      recipe_exposure,
-      recipehem_color_033,
-      recipehem_color_11,
-      recipehem_color_42,
-      recipehem_color_50,
-      recipehem_color_566,
-      recipehem_color_100,
-      recipehem_oxytype,
-      recipehem_oxygen,
-      recipehem_exposure
+      tableId,
+      uuid_user
     },
     type: Sequelize.QueryTypes.INSERT
   });
+//     const insertQuery = `
+//     INSERT INTO treatment (
+//       table_id,sample, uuid_user, comments, currcolor, wishedcolor, gotcolor, quantity, recipe, recipehem
+//     )
+//     VALUES (
+//       :tableId,
+//       ROW(:hair_type, :thickness, :position, :growth, :length, :white_hair, :density)::hair_sample,
+//       :uuid_user,
+//       :comments,
+//       :currcolor,
+//       :wishedcolor,
+//       :gotcolor,
+//       :quantity,
+//       // ROW(:recipe_color_033, :recipe_color_11, :recipe_color_42, :recipe_color_50, :recipe_color_566, :recipe_color_100, :recipe_oxytype, :recipe_oxygen, :recipe_exposure)::color_type,
+//       ROW(:recipehem_color_033, :recipehem_color_11, :recipehem_color_42, :recipehem_color_50, :recipehem_color_566, :recipehem_color_100, :recipehem_oxytype, :recipehem_oxygen, :recipehem_exposure)::color_type
+//     )
+//     RETURNING *;
+//   `;
+  
+//   const result = await sequelize.query(insertQuery, {
+//     replacements: {
+// tableId,
+//       hair_type,
+//       thickness,
+//       position,
+//       growth,
+//       length,
+//       white_hair,
+//       density,
+//       uuid_user,
+//       comments,
+//       currcolor,
+//       wishedcolor,
+//       gotcolor,
+//       quantity,
+//       recipe_color_033,
+//       recipe_color_11,
+//       recipe_color_42,
+//       recipe_color_50,
+//       recipe_color_566,
+//       recipe_color_100,
+//       recipe_oxytype,
+//       recipe_oxygen,
+//       recipe_exposure,
+//       recipehem_color_033,
+//       recipehem_color_11,
+//       recipehem_color_42,
+//       recipehem_color_50,
+//       recipehem_color_566,
+//       recipehem_color_100,
+//       recipehem_oxytype,
+//       recipehem_oxygen,
+//       recipehem_exposure
+//     },
+//     type: Sequelize.QueryTypes.INSERT
+//   });
   res.status(200).json({
     success: true,
     message: "Data Successfully Created!",
