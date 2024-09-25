@@ -237,11 +237,12 @@ const treatmentId = treatmentRecord.table_id;
           type: Sequelize.QueryTypes.RAW
       }
   );
-
+  const res= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
   // If you need to return a response
   res.status(200).json({
     success: true,
     message: "Read Scanner Working!",
+    currColor:res.currColor
     // message: "Procedure executed successfully!",
   });
 } catch (error) {
@@ -252,12 +253,17 @@ const treatmentId = treatmentRecord.table_id;
 }
 const updateWishedColor=async(req,res,next)=>{
   try {
-    const response = await Treatment.update({wishedcolor:req.body.wishedColor,quantity:req.body.quantity}, {
-      where: {uuid_user: req.body.userId },
+    console.log(req.body)
+    const response = await Treatment.update({
+      wishedcolor: req.body.wishedColor ?? 0,
+      quantity: req.body.quantity ?? 0,
+      currcolor: req.body.currColor ?? 0,
+    }, {
+      where: { uuid_user: req.body.userId ?? 0 },
     });
     res.status(200).json({
       success: true,
-      message: "wised color update successfully Successfully!",
+      message: "Treatment update Successfully!",
     });
   } catch (error) {
     new HttpError("Something Went Wrong Please Try Later.", 500);
@@ -276,9 +282,9 @@ const updateQuantity=async(req,res,next)=>{
     new HttpError("Something Went Wrong Please Try Later.", 500);
   }
 }
-const computeFormula = async(req,res,next)=>{
+const computeFormula = async(userId)=>{
   try {
-       const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
+       const treatmentRecord= await Treatment.findOne({ where: { uuid_user: userId },raw: true });
        console.log(treatmentRecord,'treatmentRecord')
        console.log(treatmentRecord.table_id,'id')
   const treatmentId = treatmentRecord.table_id;
@@ -330,6 +336,7 @@ const computeFormula = async(req,res,next)=>{
   const produceFormula = async(req,res,next)=>{
     try {
       console.log("click")
+      await computeFormula(req.body.userId)
          const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
     const id = treatmentRecord.table_id;
     const pm = 'pump1';
