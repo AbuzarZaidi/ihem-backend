@@ -242,7 +242,7 @@ const treatmentId = treatmentRecord.table_id;
   res.status(200).json({
     success: true,
     message: "Read Scanner Working!",
-    currColor:res.currColor
+    currColor:res.gotcolor
     // message: "Procedure executed successfully!",
   });
 } catch (error) {
@@ -251,24 +251,7 @@ const treatmentId = treatmentRecord.table_id;
     
 }
 }
-const updateWishedColor=async(req,res,next)=>{
-  try {
-    console.log(req.body)
-    const response = await Treatment.update({
-      wishedcolor: req.body.wishedColor ?? 0,
-      quantity: req.body.quantity ?? 0,
-      currcolor: req.body.currColor ?? 0,
-    }, {
-      where: { uuid_user: req.body.userId ?? 0 },
-    });
-    res.status(200).json({
-      success: true,
-      message: "Treatment update Successfully!",
-    });
-  } catch (error) {
-    new HttpError("Something Went Wrong Please Try Later.", 500);
-  }
-}
+
 const updateQuantity=async(req,res,next)=>{
   try {
     const response = await Treatment.update({quantity:req.body.quantity}, {
@@ -296,24 +279,26 @@ const computeFormula = async(userId)=>{
         }
         
     );
-  
+  return
     // If you need to return a response
-    res.status(200).json({
-      success: true,
-      message: "Compute formula executed successfully!",
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Compute formula executed successfully!",
+    // });
   } catch (error) {
-    console.log(error)
-    new HttpError("Something Went Wrong Please Try Later.", 500);
+    return false
+    // console.log(error)
+    // new HttpError("Something Went Wrong Please Try Later.", 500);
       
   }
   }
-  const modifyFormula = async(req,res,next)=>{
+  const modifyFormula = async(userId,color,percentage)=>{
     try {
-         const treatmentRecord= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
+         const treatmentRecord= await Treatment.findOne({ where: { uuid_user: userId },raw: true });
+        //  console.log(treatmentRecord,'treatmentRecord')
     const treatmentId = treatmentRecord.table_id;
-    const color = req.body.color;
-    const percentage = req.body.percentage;
+    // const color = color;
+    // const percentage = percentage;
         await sequelize.query(
           'CALL public.modify_formula(:treatmentId, :color, :percentage)',
           {
@@ -321,17 +306,38 @@ const computeFormula = async(userId)=>{
               type: Sequelize.QueryTypes.RAW
           }
       );
+      return
     
       // If you need to return a response
-        res.status(200).json({
-        success: true,
-        message: "Modify formula executed successfully!",
-      });
+      //   res.status(200).json({
+      //   success: true,
+      //   message: "Modify formula executed successfully!",
+      // });
     } catch (error) {
-      console.log(error)
-      new HttpError("Something Went Wrong Please Try Later.", 500);
+      return false
         
     }
+    }
+    const updateWishedColor=async(req,res,next)=>{
+      try {
+        const response = await Treatment.update({
+          wishedcolor: req.body.wishedColor ?? 0,
+          quantity: req.body.quantity ?? 0,
+          currColor: req.body.currColor ?? 0,
+        }, {
+          where: { uuid_user: req.body.userId ?? 0 },
+        });
+        if(req.body.addionalColor&&req.body.additionColorQuantity){
+          console.log("yes")
+          await modifyFormula(req.body.userId,req.body.addionalColor,req.body.additionColorQuantity)
+        }
+        res.status(200).json({
+          success: true,
+          message: "Treatment update Successfully!",
+        });
+      } catch (error) {
+        new HttpError("Something Went Wrong Please Try Later.", 500);
+      }
     }
   const produceFormula = async(req,res,next)=>{
     try {
