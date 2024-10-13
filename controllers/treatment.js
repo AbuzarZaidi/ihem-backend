@@ -237,13 +237,14 @@ const treatmentId = treatmentRecord.table_id;
           type: Sequelize.QueryTypes.RAW
       }
   );
-  const res= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
-  // If you need to return a response
+    
+  const response= await Treatment.findOne({ where: { uuid_user: req.body.userId },raw: true });
   res.status(200).json({
     success: true,
     message: "Read Scanner Working!",
-    currColor:res.gotcolor
-    // message: "Procedure executed successfully!",
+    currColor:response.gotcolor,
+    // currColor:50,
+    gotColor:0.1
   });
 } catch (error) {
   console.log(error)
@@ -320,10 +321,11 @@ const computeFormula = async(userId)=>{
     }
     const updateWishedColor=async(req,res,next)=>{
       try {
+        console.log(req.body,'req.body')
         const response = await Treatment.update({
-          wishedcolor: req.body.wishedColor ?? 0,
+          wishedcolor: req.body.wishedcolor??0,
           quantity: req.body.quantity ?? 0,
-          currColor: req.body.currColor ?? 0,
+          currcolor: req.body.currColor ?? 0,
         }, {
           where: { uuid_user: req.body.userId ?? 0 },
         });
