@@ -7,7 +7,8 @@ const TreatmentModel = require('../models/treatment');
 const sequelize = new Sequelize('dblabor', 'postgres', 'labor', {
 // const sequelize = new Sequelize('dblabor', 'postgres', 'labor', {
   // host: '192.168.0.107',
-  host: '192.168.10.15',
+  // host: '192.168.10.15',
+  host: '192.168.0.134',
   // host: '192.168.10.28',
   dialect: 'postgres', // Specify the dialect
 });

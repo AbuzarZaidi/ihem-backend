@@ -7,6 +7,7 @@ router.get('/getTreatmentDataById/:id', treatmentController.getTreatmentDataById
 router.get('/getTreatmentDataByUserId/:userId', treatmentController.getTreatmentDataByUserId);
 router.delete('/deleteTreatmentDataById/:id', treatmentController.deleteTreatmentDataById)
 router.post('/readSensorColor', treatmentController.readSensorColor)
+router.post('/readSensorFinalColor', treatmentController.readSensorFinalColor)
 router.post('/computeFormula', treatmentController.computeFormula)
 router.post('/modifyFormula', treatmentController.modifyFormula)
 router.post('/produceFormula', treatmentController.produceFormula)
